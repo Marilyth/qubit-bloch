@@ -123,8 +123,7 @@ class BlochSphere:
         self.qubit_label.remove()
         self.qubit_label = self.ax_sphere.text(x * 1.1, y * 1.1, z * 1.1, '|ψ⟩', color='black', fontsize=12, ha='center', va='center')
 
-        zero_value, one_value = self.wavefunction()
-        self.ax_sphere.set_title(f"Bloch Sphere\n{np.round(zero_value, 2)}∣0⟩\n{np.round(one_value, 2)}∣1⟩")
+        self.ax_sphere.set_title(f"Bloch Sphere\n{np.round(self.zero_value, 2)}∣0⟩\n{np.round(self.one_value, 2)}∣1⟩")
 
     def update(self, val):
         """Update the plot with the new qubit state."""
@@ -143,7 +142,13 @@ class BlochSphere:
         current_theta = self.slider_theta.val
         current_phi = self.slider_phi.val
 
+        if abs(phi - current_phi) > 180:
+            phi = phi - np.sign(phi) * 360
+
         for new_theta, new_phi in zip(np.linspace(current_theta, theta, 20), np.linspace(current_phi, phi, 20)):
+            if abs(new_phi) > 180:
+                new_phi = new_phi - np.sign(new_phi) * 360
+
             self.slider_theta.set_val(new_theta)
             self.slider_phi.set_val(new_phi)
             self.update(0)
